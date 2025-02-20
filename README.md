@@ -16,6 +16,7 @@ instagram-bot-detector/
 │   ├── 📁 data/                # Datasets y procesamiento
 │   │   ├── dataset_loader.py    # Carga y preprocesamiento del dataset
 │   │   ├── scraper.py           # Web scraping de Instagram con Instaloader
+│   ├── 📁 datasets/             # Datasets en formato JSON para entrenar el modelo
 │   │
 │   ├── 📁 api/                 # Servidor API para consultas
 │   │   ├── api_server.py        # FastAPI para consulta de bots
