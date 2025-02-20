@@ -19,7 +19,6 @@ config.json
 *.env
 
 # Modelos y datasets pesados
-models/
 data/*.csv
 data/*.json
 data/*.xlsx
