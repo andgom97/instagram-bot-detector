@@ -2,10 +2,7 @@ import os
 import sys
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments
-
-# Asegurar que se puede importar dataset_loader.py correctamente
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
-
 from data.dataset_loader import load_dataset
 
 # Cargar los datos usando la nueva función corregida

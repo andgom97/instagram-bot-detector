@@ -1,6 +1,10 @@
+import os
+import sys
 from fastapi import FastAPI, HTTPException
 from .bot_detector import analyze_followers
-from .scraper import get_followers
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
+from data.scraper import get_followers
+
 import uvicorn
 import logging
 

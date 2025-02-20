@@ -1,7 +1,9 @@
+import os
+import sys
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
 import pandas as pd
-from .model_loader import load_model
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
+from models.model_loader import load_model
 
 # Cargar modelo
 model, tokenizer = load_model()
