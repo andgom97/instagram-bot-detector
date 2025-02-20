@@ -6,4 +6,5 @@ pandas
 instaloader
 fastapi
 uvicorn
-
+accelerate
+safetensors

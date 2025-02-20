@@ -86,6 +86,41 @@ http://127.0.0.1:8000/docs
 ```
 para interactuar con la API usando la interfaz de **FastAPI**.
 
+## 📌 Requisitos Mínimos de Hardware
+
+Para entrenar este modelo de detección de bots en Instagram con **DeepSeek LLM**, se requiere un hardware con suficiente capacidad de cómputo. A continuación, se detallan los requisitos recomendados:
+
+### ✅ Opción 1: Entrenamiento en GPU Local
+Si deseas entrenar el modelo en tu propio equipo, asegúrate de contar con:
+- **GPU NVIDIA con CUDA** (mínimo **RTX 3090 (24GB VRAM)**, recomendado **A100 (40GB VRAM)**).
+- **CPU de alto rendimiento** (mínimo **Intel i7/Ryzen 7**).
+- **RAM**: 32GB recomendados (16GB mínimo).
+- **Almacenamiento**: 50GB de espacio libre (preferiblemente SSD NVMe).
+
+> **Nota:** Tarjetas gráficas con **menos de 16GB VRAM** (ej. RTX 3060 Laptop) pueden generar errores de memoria (`CUDA out of memory`).
+
+---
+
+### ✅ Opción 2: Entrenamiento en Nube
+Si no tienes una GPU potente, puedes usar servicios en la nube con **GPUs de alta VRAM**:
+
+| Plataforma         | GPU Disponible              | Costo Aproximado |
+|-------------------|---------------------------|------------------|
+| **Google Colab Pro+** | **A100 (40GB VRAM)**      | **$20/mes** |
+| **RunPod.io**      | **A100 (40GB), H100 (80GB)** | **$0.50 - $1/h** |
+| **Lambda Labs**    | **RTX 4090 (24GB), A100 (80GB)** | **$1.10/h** |
+| **AWS EC2**       | **8x A100 (320GB VRAM)**    | **$3 - $5/h** |
+
+> **Recomendación**: Si solo necesitas entrenar el modelo una vez, **Google Colab Pro+** o **RunPod.io** son opciones accesibles y eficientes.
+
+---
+
+### 🔹 Verificación de Hardware
+Antes de entrenar, verifica si tu GPU cumple con los requisitos ejecutando:
+```bash
+python -c "import torch; print(torch.cuda.get_device_name(0))"
+
+
 ## Contribuciones
 Si deseas mejorar el proyecto, siéntete libre de abrir un **Pull Request** o crear un **Issue** en GitHub.
 
