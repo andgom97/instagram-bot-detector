@@ -119,7 +119,7 @@ Si no tienes una GPU potente, puedes usar servicios en la nube con **GPUs de alt
 Antes de entrenar, verifica si tu GPU cumple con los requisitos ejecutando:
 ```bash
 python -c "import torch; print(torch.cuda.get_device_name(0))"
-
+```
 
 ## Contribuciones
 Si deseas mejorar el proyecto, siéntete libre de abrir un **Pull Request** o crear un **Issue** en GitHub.
