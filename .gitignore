@@ -1,0 +1,53 @@
+# Directorios y archivos generados por Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entornos virtuales
+venv/
+.env/
+*.venv
+Pipfile
+Pipfile.lock
+
+# Datos sensibles
+*.log
+*.db
+config.json
+*.sqlite3
+*.env
+
+# Modelos y datasets pesados
+models/
+data/*.csv
+data/*.json
+data/*.xlsx
+data/*.pickle
+
+# Archivos de entrenamiento y resultados
+logs/
+*.ckpt
+*.h5
+*.pt
+*.onnx
+*.pkl
+
+# Caché de Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Configuración específica del IDE
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Archivos de FastAPI/Uvicorn
+*.pid
+
+# Docker & Dependencias
+docker-compose.override.yml
+node_modules/
+
+# Configuración del sistema operativo
+.DS_Store
+Thumbs.db
