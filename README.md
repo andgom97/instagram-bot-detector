@@ -50,7 +50,7 @@ Para entrenar el modelo **DeepSeek LLM**, ejecuta:
 python src/models/deepseek_trainer.py
 ```
 
-Este script cargará el dataset **InstaFake**, entrenará el modelo y lo guardará en la carpeta `models/`.
+Este script cargará el dataset ![InstaFake](https://github.com/fcakyon/instafake-dataset), entrenará el modelo y lo guardará en la carpeta `models/`.
 
 ## Uso del `main.py`
 El archivo `main.py` permite iniciar la API o analizar un usuario de Instagram desde la línea de comandos.
