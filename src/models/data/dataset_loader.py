@@ -1,89 +1,96 @@
 import os
 import pandas as pd
-import json
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
-# Obtener la ruta absoluta del directorio raíz del proyecto
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 
-def load_dataset(fake_data_path=None, real_data_path=None, test_size=0.2, random_state=42):
-    """
-    Carga y preprocesa el dataset desde archivos JSON, combinando cuentas falsas y reales.
+def convert_to_text(row):
+    """Convert numerical features into a structured text format for TF-IDF transformation."""
+    return f"User has {row['userFollowerCount']} followers, follows {row['userFollowingCount']} accounts, " \
+           f"has a biography of {row['userBiographyLength']} characters, posted {row['userMediaCount']} media items, " \
+           f"{'has' if row['userHasProfilPic'] else 'does not have'} a profile picture, " \
+           f"{'has' if row['userIsPrivate'] else 'does not have'} a private account, " \
+           f"username contains {row['usernameDigitCount']} digits and has {row['usernameLength']} characters."
 
-    Args:
-        fake_data_path (str): Ruta al dataset de cuentas falsas en JSON.
-        real_data_path (str): Ruta al dataset de cuentas genuinas en JSON.
-        test_size (float): Porcentaje de datos reservados para pruebas.
-        random_state (int): Semilla para la división de datos.
+def load_dataset():
+    """Load and preprocess the dataset with both numerical and text-based features."""
 
-    Returns:
-        tuple: (X_train, X_test, y_train, y_test) listas de datos de entrenamiento y prueba.
-    """
+    fake_data_path = os.path.join(BASE_DIR, "models/data/datasets/fake_users.json")
+    real_data_path = os.path.join(BASE_DIR, "models/data/datasets/genuine_users.json")
 
-    # Asegurar que las rutas sean correctas sin doble "src/"
-    if fake_data_path is None:
-        fake_data_path = os.path.join(BASE_DIR, "models/data/datasets/fake_users.json")
-    if real_data_path is None:
-        real_data_path = os.path.join(BASE_DIR, "models/data/datasets/genuine_users.json")
-
-    # Normalizar las rutas para evitar errores
-    fake_data_path = os.path.normpath(fake_data_path)
-    real_data_path = os.path.normpath(real_data_path)
-
-    # Verificar que los archivos existen
+    # Ensure the dataset files exist
     if not os.path.exists(fake_data_path):
-        raise FileNotFoundError(f"❌ Dataset de usuarios falsos no encontrado en {fake_data_path}")
+        raise FileNotFoundError(f"❌ Dataset not found: {fake_data_path}")
     if not os.path.exists(real_data_path):
-        raise FileNotFoundError(f"❌ Dataset de usuarios reales no encontrado en {real_data_path}")
+        raise FileNotFoundError(f"❌ Dataset not found: {real_data_path}")
 
-    # Cargar JSON en DataFrames
-    with open(fake_data_path, "r", encoding="utf-8") as f:
-        fake_users = json.load(f)
+    # Load JSON into DataFrames
+    df_fake = pd.read_json(fake_data_path)
+    df_real = pd.read_json(real_data_path)
 
-    with open(real_data_path, "r", encoding="utf-8") as f:
-        real_users = json.load(f)
+    # Assign labels (1 = Bot, 0 = Real User)
+    df_fake["isFake"] = 1
+    df_real["isFake"] = 0
 
-    df_fake = pd.DataFrame(fake_users)
-    df_real = pd.DataFrame(real_users)
-
-    # Agregar etiquetas para clasificación
-    df_fake["isFake"] = 1  # 1 = Bot
-    df_real["isFake"] = 0  # 0 = Real
-
-    # Combinar datasets
+    # Combine datasets
     df = pd.concat([df_fake, df_real], ignore_index=True)
 
-    # Seleccionar características
+    # Define numerical feature columns
     feature_columns = [
         "userFollowerCount", "userFollowingCount", "userBiographyLength", "userMediaCount",
         "userHasProfilPic", "userIsPrivate", "usernameDigitCount", "usernameLength"
     ]
 
-    # **🔹 Convertir columnas a float para evitar el FutureWarning**
-    df[feature_columns] = df[feature_columns].astype(float)
+    # Ensure no missing values before processing
+    df = df.dropna(subset=feature_columns + ["isFake"])
+    
+    # Convert labels to integers
+    df["isFake"] = df["isFake"].astype(int)
 
-    # **🔹 Asegurar que X sea una copia para evitar `SettingWithCopyWarning`**
-    X = df[feature_columns].copy()  # 🔹 Se hace una copia explícita
-    y = df["isFake"].copy()  # 🔹 También se copia `y` por seguridad
+    ### 🚀 Add New Numerical Features 🚀 ###
+    
+    # 1️⃣ **Follower-to-Following Ratio**
+    df["follower_following_ratio"] = df["userFollowerCount"] / (df["userFollowingCount"] + 1)  # Avoid division by zero
 
-    # Normalización de datos numéricos usando `.loc[]` para evitar el warning
+    # 2️⃣ **Binary Feature: Does the username contain numbers?**
+    df["has_numbers_in_username"] = df["usernameDigitCount"].apply(lambda x: 1 if x > 0 else 0)
+
+    # 3️⃣ **Engagement Score (Posts per Follower)**
+    df["engagement_score"] = (df["userMediaCount"] + 1) / (df["userFollowerCount"] + 1)  # Avoid division by zero
+
+    # Update feature columns to include new ones
+    feature_columns += ["follower_following_ratio", "has_numbers_in_username", "engagement_score"]
+
+    # Normalize numerical features (Scale between 0 and 1)
     scaler = MinMaxScaler()
-    X.loc[:, feature_columns] = scaler.fit_transform(X[feature_columns])
+    df[feature_columns] = scaler.fit_transform(df[feature_columns])
 
-    # Dividir en entrenamiento y prueba
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+    # Convert dataset into structured text format (for TF-IDF transformation)
+    df["text"] = df.apply(convert_to_text, axis=1)
 
-    return X_train, X_test, y_train, y_test
+    # Split dataset into training and testing sets
+    X_train_text, X_test_text, y_train, y_test = train_test_split(df["text"], df["isFake"], test_size=0.2, random_state=42)
+    X_train_num, X_test_num, _, _ = train_test_split(df[feature_columns], df["isFake"], test_size=0.2, random_state=42)
 
-if __name__ == "__main__":
-    # Prueba para verificar si la ruta del dataset es correcta
-    print("Ruta esperada para fake_users.json:", os.path.normpath(os.path.join(BASE_DIR, "models/data/datasets/fake_users.json")))
-    print("Ruta esperada para genuine_users.json:", os.path.normpath(os.path.join(BASE_DIR, "models/data/datasets/genuine_users.json")))
+    # Drop any remaining NaN values (just in case)
+    X_train_text.dropna(inplace=True)
+    X_test_text.dropna(inplace=True)
+    y_train = y_train.dropna()
+    y_test = y_test.dropna()
 
-    try:
-        X_train, X_test, y_train, y_test = load_dataset()
-        print(f"✅ Datos de entrenamiento: {X_train.shape[0]} muestras")
-        print(f"✅ Datos de prueba: {X_test.shape[0]} muestras")
-    except FileNotFoundError as e:
-        print(f"❌ Error: {e}")
+    # Ensure labels are 1D arrays for XGBoost
+    y_train = np.array(y_train).reshape(-1)
+    y_test = np.array(y_test).reshape(-1)
+
+    # 🚀 Debugging: Print dataset shapes before returning
+    print(f"\n✅ Final dataset shapes:")
+    print(f"   - X_train_text: {X_train_text.shape}")
+    print(f"   - X_train_num: {X_train_num.shape}")
+    print(f"   - y_train: {y_train.shape}")
+    print(f"   - X_test_text: {X_test_text.shape}")
+    print(f"   - X_test_num: {X_test_num.shape}")
+    print(f"   - y_test: {y_test.shape}")
+
+    return X_train_text, X_test_text, X_train_num, X_test_num, y_train, y_test
