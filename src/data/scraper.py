@@ -12,15 +12,6 @@ from PIL import Image
 import imagehash
 from io import BytesIO
 from tqdm import tqdm
-import yaml
-
-# Load configuration from config.yml
-config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "config/config.yml"))
-with open(config_path, "r") as config_file:
-    config = yaml.safe_load(config_file)
-
-INSTA_USER = config["insta_user"]
-INSTA_PASS = config["insta_pass"]
 
 # Default Instagram profile picture URLs (Common placeholders)
 DEFAULT_PROFILE_PIC_HASHES = {
@@ -92,7 +83,7 @@ def get_instagram_data(user: instaloader.Profile):
         print(f"❌ Unexpected error: {e}")
         return None
 
-def get_followers_data(username: str, attempt: int = 1, retrieved_followers: list = None):
+def get_followers_data(username: str, insta_user: str, insta_pass: str, attempt: int = 1, retrieved_followers: list = None):
     """
     Fetches the list of followers for a given Instagram username while handling rate limits.
     
@@ -101,6 +92,8 @@ def get_followers_data(username: str, attempt: int = 1, retrieved_followers: lis
 
     Args:
         username (str): The target Instagram username.
+        insta_user (str): Your Instagram username.
+        insta_pass (str): Your Instagram password.
         attempt (int): Retry attempt count.
         retrieved_followers (list): Followers collected so far.
 
@@ -111,7 +104,7 @@ def get_followers_data(username: str, attempt: int = 1, retrieved_followers: lis
 
     try:
         # ✅ Login to Instagram
-        loader.login(INSTA_USER, INSTA_PASS)
+        loader.login(insta_user, insta_pass)
 
         print(f"🔍 Fetching followers of {username} (Attempt {attempt})...")
         profile = instaloader.Profile.from_username(loader.context, username)

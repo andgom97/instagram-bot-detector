@@ -2,7 +2,7 @@ from http.client import HTTPException
 import os
 import sys
 import logging
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 # ✅ Explicitly ensure `src/` is in Python's path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
@@ -33,25 +33,36 @@ def root():
 def analyze_user(username: str):
     """
     Fetches the followers of an Instagram user and analyzes how many are bots.
-    
+
     Args:
     - username (str): Instagram username to analyze.
-    - insta_user (str): Your Instagram username.
-    - insta_pass (str): Your Instagram password.
+    - insta_user (str): Instagram login username (provided in request).
+    - insta_pass (str): Instagram login password (provided in request).
 
     Returns:
-    - dict: Analysis results including bot percentage and follower
-    predictions.
+    - dict: Analysis results including bot percentage and follower predictions.
     """
     try:
         logger.info(f"🔍 Fetching followers of {username}...")
 
-        followers = get_followers_data(username)
+        # ✅ Get Instagram credentials from request
+        insta_user = request.args.get("insta_user")
+        insta_pass = request.args.get("insta_pass")
+
+        # ✅ Validate credentials
+        if not insta_user or not insta_pass:
+            logger.error("❌ Missing Instagram credentials in request.")
+            return jsonify({"error": "Instagram username and password are required."}), 400
+
+        # ✅ Fetch followers using login credentials
+        followers = get_followers_data(username, insta_user, insta_pass)
         if not followers:
             logger.error(f"❌ Error fetching followers for {username}.")
-            raise HTTPException(status_code=404, detail="User not found or private.")
+            return jsonify({"error": "User not found or private."}), 404
 
-        logger.info(f"✅ Retrieved {username} followers. Analyzing bot percentage...") 
+        logger.info(f"✅ Retrieved {len(followers)} followers for {username}. Analyzing bot percentage...")
+
+        # ✅ Analyze followers to detect bots
         bot_percentage, df = analyze_followers(followers)
 
         return jsonify({
@@ -63,7 +74,7 @@ def analyze_user(username: str):
 
     except Exception as e:
         logger.error(f"❌ Error analyzing {username}: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error.")
+        return jsonify({"error": "Internal server error."}), 500
 
 def start_api():
     """Function to start FastAPI server with Uvicorn."""
@@ -71,5 +82,4 @@ def start_api():
     app.run(debug=True, host="0.0.0.0", port=8000)
 
 if __name__ == "__main__":
-    analyze_user("pergo.dj")
-    # start_api()
+    start_api()
