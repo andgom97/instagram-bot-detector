@@ -11,4 +11,6 @@ Requests==2.32.3
 scikit_learn==1.6.1
 scipy==1.15.2
 setuptools==65.5.0
+torch==2.5.1+cu121
+tqdm==4.67.1
 xgboost==2.1.4
