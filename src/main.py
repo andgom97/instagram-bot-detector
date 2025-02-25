@@ -1,13 +1,16 @@
 import argparse
+import logging
 from api.api_server import app
-import uvicorn
 from data.scraper import get_followers_data
 from api.bot_detector import analyze_followers
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 def run_api():
     """Inicia el servidor API usando FastAPI y Uvicorn."""
-    print("Iniciando el servidor API en http://127.0.0.1:8000")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    logger.info("🚀 Starting API server at http://0.0.0.0:8000")
+    app.run(debug=True, host="0.0.0.0", port=8000)
 
 def analyze_user(username, user, password):
     """Obtiene los seguidores de un usuario y analiza cuántos son bots."""
