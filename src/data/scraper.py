@@ -3,7 +3,6 @@ import math
 import os
 import random
 import time
-from typing import List
 from flask import json
 import instaloader
 import re
@@ -115,7 +114,6 @@ def get_followers_data(username: str, insta_user: str, insta_pass: str, attempt:
 
          # ✅ Get total number of followers
         total_followers = profile.followers
-        print(total_followers)
 
         # ✅ Initialize tqdm progress bar
         with tqdm(total=total_followers, desc="Fetching followers", unit="follower") as pbar:

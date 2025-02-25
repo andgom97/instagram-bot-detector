@@ -17,8 +17,8 @@ def convert_to_text(row):
 def load_dataset():
     """Load and preprocess the dataset with both numerical and text-based features."""
 
-    fake_data_path = os.path.join(BASE_DIR, "models/data/datasets/fake_users.json")
-    real_data_path = os.path.join(BASE_DIR, "models/data/datasets/genuine_users.json")
+    fake_data_path = os.path.join(BASE_DIR, "src/data/datasets/fake_users.json")
+    real_data_path = os.path.join(BASE_DIR, "src/data/datasets/genuine_users.json")
 
     # Ensure the dataset files exist
     if not os.path.exists(fake_data_path):
