@@ -1,102 +1,108 @@
 # Instagram Bot Detector
 
 ## Descripción del Proyecto
-Instagram Bot Detector es una herramienta basada en **XGBoost** que permite analizar los seguidores de una cuenta de Instagram y determinar cuántos de ellos son bots. Utiliza **Machine Learning** y **scraping con Instaloader** para recopilar datos y clasificarlos con un modelo de IA entrenado.
+
+Instagram Bot Detector is a tool based on **XGBoost** that analyzes an Instagram account’s followers and determines how many of them are bots. It uses **Machine Learning** and **scraping with Instaloader** to collect data and classify them using a trained AI model.
 
 ## Estructura del Proyecto
 ```
 instagram-bot-detector/
-│── 📁 src/                    # Código fuente del proyecto
-│   ├── 📁 models/             # Modelos y entrenamiento
-│   │   ├── xgboost_trainer.py    # Entrenamiento del modelo XGBoost
-│   │   ├── model_loader.py       # Carga del modelo entrenado
-│   │   ├── inferencer.py         # Predicciones con el modelo entrenado
-│   │   ├── model/                # Carpeta donde se guarda el modelo entrenado
+│── 📁 src/                    # Project source code
+│   ├── 📁 models/             # Models and training
+│   │   ├── xgboost_trainer.py    # XGBoost model training
+│   │   ├── model_loader.py       # Loads the trained model
+│   │   ├── inferencer.py         # Predictions using the trained model
+│   │   ├── model/                # Folder where the trained model is stored
 │   │
-│   ├── 📁 data/                 # Datasets y procesamiento
-│   │   ├── dataset_loader.py    # Carga y preprocesamiento del dataset
-│   │   ├── scraper.py           # Web scraping de Instagram con Instaloader
-│   │   ├── 📁 datasets/         # Datasets en formato JSON para entrenar el modelo
+│   ├── 📁 data/                 # Datasets and processing
+│   │   ├── dataset_loader.py    # Loads and preprocesses the dataset
+│   │   ├── scraper.py           # Instagram web scraping with Instaloader
+│   │   ├── 📁 datasets/         # Datasets in JSON format for model training
 │   │
-│   ├── 📁 api/                 # Servidor API para consultas
-│   │   ├── api_server.py        # FastAPI para consulta de bots
-│   │   ├── bot_detector.py      # Lógica de predicción
+│   ├── 📁 api/                 # API server for queries
+│   │   ├── api_server.py        # Flask API for bot detection
+│   │   ├── bot_detector.py      # Prediction logic
 │   │
-│   ├── main.py                 # Script principal
+│   ├── main.py                 # Main script
 │
-│── 📁 notebooks/               # Jupyter notebooks de exploración
-│── 📁 tests/                   # Pruebas unitarias
-│── 📁 docs/                    # Documentación
-│── 📁 logs/                    # Registros de entrenamiento
-│── .gitignore                  # Archivos a ignorar en Git
-│── README.md                   # Documentación del proyecto
-│── requirements.txt             # Librerías necesarias
-│── setup.py                     # Script de instalación del paquete
+│── 📁 notebooks/               # Jupyter notebooks for exploration
+│── 📁 tests/                   # Unit tests
+│── 📁 docs/                    # Documentation
+│── 📁 logs/                    # Training logs
+│── .gitignore                  # Files to ignore in Git
+│── README.md                   # Project documentation
+│── requirements.txt             # Required libraries
+│── setup.py                     # Package installation script
 ```
 
-## Instalación del Proyecto
+## Project Installation
 
-Para instalar el proyecto como un paquete de Python, ejecuta:
+To install the project as a Python package, run:
 
 ```bash
 pip install -e .
 ```
 
-Esto instalará el proyecto en modo editable, permitiéndote modificarlo sin necesidad de reinstalarlo.
+This installs the project in editable mode, allowing modifications without reinstallation.
 
-## Entrenamiento del Modelo
-Para entrenar el modelo **XGBoost**, ejecuta:
+## Model Training
+To train the **XGBoost** model first you will need to place your datasets (you can use the [InstaFake](https://github.com/fcakyon/instafake-dataset)) into the `src/data/datasets/` path in `.json` format, and then execute:
 
 ```bash
 python src/models/xgboost_trainer.py
 ```
 
-Este script cargará el dataset [InstaFake](https://github.com/fcakyon/instafake-dataset), entrenará el modelo y lo guardará en la carpeta `models/`.
+This script loads the datasets defined in `src/data/datasets/`, trains the model, and saves it in the `models/` folder.
 
-## Uso del `main.py`
-El archivo `main.py` permite iniciar la API o analizar un usuario de Instagram desde la línea de comandos.
+## Using `main.py`
 
-### Iniciar la API
+The `main.py` script allows you to either start the API or analyze an Instagram user from the command line.
+
+### Start the API
+
 ```bash
 python src/main.py --api
 ```
-Esto iniciará el servidor en `http://127.0.0.1:8000`.
 
-### Analizar un usuario de Instagram
+This starts the server at `http://127.0.0.1:8000`.
+
+### Analyze an Instagram User
+
 ```bash
 python src/main.py --user usuario_instagram --insta_user tu_usuario --insta_pass tu_contraseña
 ```
-Esto extraerá los seguidores del usuario y calculará el porcentaje de bots.
+This extracts the user's followers and calculates the percentage of bots.
 
-## Análisis de un Usuario de Instagram con API
-Para analizar la cantidad de seguidores bots de un usuario de Instagram mediante la API:
+## Analyze an Instagram User via API
+
+To analyze the number of bot followers of an Instagram user through the API:
 
 ```bash
 python src/api/api_server.py
 
 ```
 
-Luego, usa la API desde el navegador o con `curl`:
+Then, use the API from your browser or via `curl`:
 
 ```bash
 curl "http://127.0.0.1:8000/analyze/test_user?insta_user=your_instagram_username&insta_pass=your_instagram_password"
 
 ```
 
-O visita en el navegador:
+Or visit in your browser:
 ```
 http://127.0.0.1:8000/docs
 ```
-para interactuar con la API usando la interfaz de **FlaskAPI**.
+to interact with the API using the **FlaskAPI** interface.
 
-## Contribuciones
-Si deseas mejorar el proyecto, siéntete libre de abrir un **Pull Request** o crear un **Issue** en GitHub.
+## Contributions
+If you would like to improve the project, feel free to open a **Pull Request** or create an **Issue** on GitHub.
 
-## Licencia
-Este proyecto está bajo la licencia **MIT**.
+## License
+This project is licensed under the **MIT** License.
 
-## Autor y Contacto
-- **Autor**: [Andrés Gómez Alfonso]
-- **Fecha de Creación**: [02, 2025]
-- **Email de Contacto**: [andgomalf@gmail.com]
+## Author & Contact
+- **Author**: [Andrés Gómez Alfonso]
+- **Creation Date**: [02, 2025]
+- **Contact Email**: [andgomalf@gmail.com]
 
