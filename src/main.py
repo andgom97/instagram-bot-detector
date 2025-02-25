@@ -8,24 +8,24 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def run_api():
-    """Inicia el servidor API usando FastAPI y Uvicorn."""
+    """Boots up the API server."""
     logger.info("🚀 Starting API server at http://0.0.0.0:8000")
     app.run(debug=True, host="0.0.0.0", port=8000)
 
 def analyze_user(username, user, password):
-    """Obtiene los seguidores de un usuario y analiza cuántos son bots."""
-    print(f"Analizando seguidores de {username}...")
+    """Fetches the followers of an Instagram user and analyzes how many are bots."""
+    print(f"Analyzing followers of {username}...")
     followers = get_followers_data(username, user, password)
     bot_percentage, df = analyze_followers(followers)
-    print(f"Porcentaje de seguidores bots: {bot_percentage:.2f}%")
+    print(f"Percentage of instagram bots in {username} followers: {bot_percentage:.2f}%")
     print(df)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Instagram Bot Detector")
-    parser.add_argument("--api", action="store_true", help="Inicia la API de Flask")
-    parser.add_argument("--user", type=str, help="Usuario de Instagram a analizar")
-    parser.add_argument("--insta_user", type=str, help="Tu usuario de Instagram (para login)")
-    parser.add_argument("--insta_pass", type=str, help="Tu contraseña de Instagram (para login)")
+    parser.add_argument("--api", action="store_true", help="Boots up the API server")
+    parser.add_argument("--user", type=str, help="Instagram User to analyze")
+    parser.add_argument("--insta_user", type=str, help="Your username for Instagram (for login)")
+    parser.add_argument("--insta_pass", type=str, help="Your password for Instagram (for login)")
     
     args = parser.parse_args()
 
@@ -34,4 +34,4 @@ if __name__ == "__main__":
     elif args.user and args.insta_user and args.insta_pass:
         analyze_user(args.user, args.insta_user, args.insta_pass)
     else:
-        print("Usa --api para iniciar el servidor o --user para analizar un usuario.")
+        print("Use --api to start the server or --user to analyze a user.")
