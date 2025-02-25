@@ -1,10 +1,10 @@
 # Instagram Bot Detector
 
-## Descripción del Proyecto
+## Project Description
 
 Instagram Bot Detector is a tool based on **XGBoost** that analyzes an Instagram account’s followers and determines how many of them are bots. It uses **Machine Learning** and **scraping with Instaloader** to collect data and classify them using a trained AI model.
 
-## Estructura del Proyecto
+## Project Structure
 ```
 instagram-bot-detector/
 │── 📁 src/                    # Project source code
