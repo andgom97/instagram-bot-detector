@@ -23,8 +23,10 @@ data/*.csv
 data/*.json
 data/*.xlsx
 data/*.pickle
-src/models/data/datasets/*.json
-src/models/offload_weights/*
+src/data/datasets/*.json
+
+# Config files for instagram authentication
+src/data/config/*
 
 # Archivos de entrenamiento y resultados
 logs/
@@ -52,4 +54,3 @@ node_modules/
 # Configuración del sistema operativo
 .DS_Store
 Thumbs.db
-

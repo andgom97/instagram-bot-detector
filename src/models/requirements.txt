@@ -1,5 +1,7 @@
-torch
-transformers
-datasets
-scikit-learn
-pandas
+imbalanced_learn==0.13.0
+imblearn==0.0
+joblib==1.4.2
+numpy==2.2.3
+scikit_learn==1.6.1
+scipy==1.15.2
+xgboost==2.1.4
