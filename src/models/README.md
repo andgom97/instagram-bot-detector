@@ -1,39 +1,5 @@
 # Model Training & Inference Architecture
 
-```mermaid
-graph TD;
-    
-    %% Data Preparation
-    A[Dataset Loader] -->|Load JSON Data| B[Text Features]
-    A -->|Load JSON Data| C[Numerical Features]
-    
-    %% Text Processing
-    B -->|Apply TF-IDF Vectorization| D[Text Vectorized Features]
-    
-    %% Numerical Processing
-    C -->|Keep as Numeric Values| E[Numerical Features Processed]
-    
-    %% Combine Features
-    D -->|Merge| F[Combined Features]
-    E -->|Merge| F
-
-    %% Data Balancing
-    F -->|Apply SMOTE| G[Balanced Data]
-    
-    %% Hyperparameter Optimization
-    G -->|Run Grid Search| H[Optimal XGBoost Parameters]
-
-    %% Model Training
-    H -->|Train XGBoost Model| I[Trained Model]
-    
-    %% Save Model & Vectorizer
-    I -->|Save XGBoost Model| J[model_loader.py]
-    D -->|Save TF-IDF Vectorizer| J
-
-    %% Model Inference
-    J -->|Load Model & Vectorizer| K[Inference Engine]
-    K -->|Predict User Profile| L[Bot or Real User]
-
 ---
 
 ## **Explanation of Workflow**
@@ -67,3 +33,40 @@ graph TD;
    - Returns `"Bot Detected"` or `"Real User"`.
 
 ---
+
+## Model Training & Inference Architecture Graph
+
+```mermaid
+graph TD;
+    
+    %% Data Preparation
+    A[Dataset Loader] -->|Load JSON Data| B[Text Features]
+    A -->|Load JSON Data| C[Numerical Features]
+    
+    %% Text Processing
+    B -->|Apply TF-IDF Vectorization| D[Text Vectorized Features]
+    
+    %% Numerical Processing
+    C -->|Keep as Numeric Values| E[Numerical Features Processed]
+    
+    %% Combine Features
+    D -->|Merge| F[Combined Features]
+    E -->|Merge| F
+
+    %% Data Balancing
+    F -->|Apply SMOTE| G[Balanced Data]
+    
+    %% Hyperparameter Optimization
+    G -->|Run Grid Search| H[Optimal XGBoost Parameters]
+
+    %% Model Training
+    H -->|Train XGBoost Model| I[Trained Model]
+    
+    %% Save Model & Vectorizer
+    I -->|Save XGBoost Model| J[model_loader.py]
+    D -->|Save TF-IDF Vectorizer| J
+
+    %% Model Inference
+    J -->|Load Model & Vectorizer| K[Inference Engine]
+    K -->|Predict User Profile| L[Bot or Real User]
+```
