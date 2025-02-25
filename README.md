@@ -72,13 +72,15 @@ Esto extraerá los seguidores del usuario y calculará el porcentaje de bots.
 Para analizar la cantidad de seguidores bots de un usuario de Instagram mediante la API:
 
 ```bash
-python src/main.py --api
+python src/api/api_server.py
+
 ```
 
 Luego, usa la API desde el navegador o con `curl`:
 
 ```bash
-curl "http://127.0.0.1:8000/analyze/usuario_instagram"
+curl "http://127.0.0.1:8000/analyze/test_user?insta_user=your_instagram_username&insta_pass=your_instagram_password"
+
 ```
 
 O visita en el navegador:
