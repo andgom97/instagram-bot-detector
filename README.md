@@ -98,9 +98,6 @@ to interact with the API using the **FlaskAPI** interface.
 ## Contributions
 If you would like to improve the project, feel free to open a **Pull Request** or create an **Issue** on GitHub.
 
-## License
-This project is licensed under the **MIT** License.
-
 ## Author & Contact
 - **Author**: [Andrés Gómez Alfonso]
 - **Creation Date**: [02, 2025]
